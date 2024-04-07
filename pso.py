@@ -24,17 +24,25 @@ class Particle:
     def update_position(self):
         #update the position of the particle
         self.position = self.position + self.velocity
-    def update_personal_best(self):
+    def update_personal_best(self,optmimization_method:str="min"):
         #update the personal best position and value of the particle
         if self.personal_best_value == None:
             self.personal_best_value = self.value
             self.personal_best_position = self.position
-        elif self.personal_best_value > self.value:
-            self.personal_best_value = self.value
-            self.personal_best_position = self.position
+        elif optmimization_method == "min":
+            if self.personal_best_value > self.value:
+                self.personal_best_value = self.value
+                self.personal_best_position = self.position
+        elif optmimization_method == "max":
+            if self.personal_best_value < self.value:
+                self.personal_best_value = self.value
+                self.personal_best_position = self.position
+        # elif self.personal_best_value > self.value:
+        #     self.personal_best_value = self.value
+        #     self.personal_best_position = self.position
 class Swarm:
     #initialize with some predefined values 
-    def __init__(self , n_particles:int=100, particles:list=[],dim:int=2,w_max:float=0.9 ,w_min:float=0.4, c1:float=2, c2:float=2, bounds:float=1000, iterations:int=1000, objective_function:callable=lambda x,y: x**2+y**2):
+    def __init__(self , n_particles:int=50, particles:list=[],dim:int=2,w_max:float=0.9 ,w_min:float=0.4, c1:float=2, c2:float=2, bounds:float=200, iterations:int=100, objective_function:callable=lambda x,y: x**2+y**2,optimization_method:str="min"):
         self.objective_function = objective_function
         self.n_particles = n_particles
         self.dim = dim
@@ -48,6 +56,7 @@ class Swarm:
         self.global_best_position = np.repeat(None,dim)
         self.global_best_value = None
         self.iterations = iterations
+        self.optmimization_method = optimization_method
     def lineal_reduction_inertia(self,iteration:int):
         self.w=(self.w_max-self.w_min)*(self.iterations-iteration)/self.iterations+self.w_min
         
@@ -60,16 +69,25 @@ class Swarm:
         for particle in self.particles:
             if self.global_best_value == None:
                 self.global_best_value = particle.personal_best_value
-                self.global_best_position = particle.personal_best_position
-            elif self.global_best_value > particle.personal_best_value:
-                self.global_best_value = particle.personal_best_value
-                self.global_best_position = particle.personal_best_position
+                self.global_best_position = particle.personal_best_position        
+            elif self.optmimization_method == "min":
+                if self.global_best_value > particle.personal_best_value:
+                    self.global_best_value = particle.personal_best_value
+                    self.global_best_position = particle.personal_best_position
+            elif self.optmimization_method == "max":
+                if self.global_best_value < particle.personal_best_value:
+                    self.global_best_value = particle.personal_best_value
+                    self.global_best_position = particle.personal_best_position
+
+            # elif self.global_best_value > particle.personal_best_value:
+            #     self.global_best_value = particle.personal_best_value
+            #     self.global_best_position = particle.personal_best_position
     def optimize(self):
         #optimize the particles
         #initialize the value, personal_best_position and personal_best_value of the particles
         for particle in self.particles:
             particle.evaluate(self.objective_function)
-            particle.update_personal_best()
+            particle.update_personal_best(self.optmimization_method)
             print("Particle value: ",particle.value)
         for i in range(self.iterations):
             self.find_global_best()
@@ -113,7 +131,7 @@ def test_function_3(x_0,x_1):
 
 
 # here is just to change the function to test the code 
-swarm1 = Swarm(objective_function=test_function_2)
+swarm1 = Swarm(objective_function=test_function_3,iterations=50,)
 swarm1.create_particles()
 swarm1.optimize()
 
