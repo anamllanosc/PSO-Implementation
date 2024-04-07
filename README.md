@@ -1,6 +1,42 @@
-# POO = {a, j, d : (a $\in$ II) $\land$ (d, j $\in$ CC)}
+<h1 align="center">Particle swarm optimization (PSO)</h1>
+<div align="center">
+    
+###### POO = {a, j, d : (a $\in$ II) $\land$ (d, j $\in$ CC)}
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+</div>
 
-### Class Diagram
+----
+## ℹ️ Table of Contents
+
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Authors](#authors)
+- [Class Diagram](#diagram)
+
+## 📂 About <a name = "about"></a>
+
+PSO implementation using OOP
+
+## 👾 Getting Started <a name = "getting_started"></a>
+
+### 😒 Prerequisites 
+
+Soon you will see some prerequisites
+
+### 🎩 Installing 
+
+Here you will have the steps to install the project
+
+## 🤵 Authors <a name = "authors"></a>
+
+- [@anamllanosc](https://github.com/anamllanosc)
+- [@jorge9805](https://github.com/jorge9805)
+- [@estfloyd](https://github.com/estfloyd)
+
+### 📰 Class Diagram <a name="diagram"></a>
 ```mermaid
 classDiagram
     Particle *--Enjambre
