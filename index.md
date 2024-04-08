@@ -1,8 +1,6 @@
 ---
 title: PSO Algorithm
-author: POO
 ---
-<h1 align="center">Particle swarm optimization (PSO)</h1>
 
 
 ## ℹ️ Table of Contents
