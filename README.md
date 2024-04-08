@@ -6,6 +6,7 @@
 [![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![Repo Page](https://img.shields.io/badge/GitHub-Page-blue?style=plastic&logo=github)](https://anamllanosc.github.io/PSO-Implementation/)
 </div>
 
 ----
@@ -15,7 +16,6 @@
 - [Getting Started](#getting_started)
 - [Authors](#authors)
 - [Class Diagram](#diagram)
-- [Repo Page](https://anamllanosc.github.io/PSO-Implementation/)
 
 ## 📂 About <a name = "about"></a>
 
