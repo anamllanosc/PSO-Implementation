@@ -2,11 +2,9 @@
 <div align="center">
     
 ###### POO = {a, j, d : (a $\in$ II) $\land$ (d, j $\in$ CC)}
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/anamllanosc/PSO-Implementation/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 [![Repo Page](https://img.shields.io/badge/GitHub-Page-blue?style=plastic&logo=github)](https://anamllanosc.github.io/PSO-Implementation/)
+[![Repo Issues](https://img.shields.io/github/issues/anamllanosc/PSO-Implementation?style=plastic)](https://github.com/anamllanosc/PSO-Implementation/issues)
+[![Repo Pull Requests](https://img.shields.io/github/issues-pr/anamllanosc/PSO-Implementation?style=plastic)](https://github.com/anamllanosc/PSO-Implementation/pulls)
 </div>
 
 ----
