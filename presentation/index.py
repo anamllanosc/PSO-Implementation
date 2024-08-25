@@ -1,26 +1,14 @@
 import streamlit as st
 
-"""## 🛰️ Table of Contents
+"""
+# Pso Implementation
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Authors](#authors)
+## Introduction
+The Particle Swarm Optimization (PSO) algorithm is a population-based optimization algorithm that was inspired by the social behavior of birds. The algorithm is initialized with a population of random solutions and searches for optima by updating generations. The solutions are updated by following two influences: the personal best solution found by each particle and the global best solution found by the entire swarm. The algorithm is terminated when a maximum number of generations is reached, or an acceptable fitness level is achieved for the population.
 
-## 📂 About <a name = "about"></a>
-The best implementation of PSO with OOP never seen by [@fegonzalez7](https://github.com/fegonzalez7)
+## Presented by: 
+- Ana Maria llanos
+- Jorge Cuadrado
+- Daniel Melo
 
-## 👾 Getting Started <a name = "getting_started"></a>
-
-### 😒 Prerequisites 
-
-Soon you will see some prerequisites
-
-### 🎩 Installing 
-
-Here you will have the steps to install the project
-
-## 👽 Authors <a name = "authors"></a>
-
-- [@anamllanosc](https://github.com/anamllanosc)
-- [@jorge9805](https://github.com/jorge9805)
-- [@estfloyd](https://github.com/estfloyd)""""
+"""
