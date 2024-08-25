@@ -1,4 +1,4 @@
-from modules.particles import Particle
+from modules.swarm import Swarm
 import numpy as np
 
 class Test:
@@ -22,14 +22,14 @@ class Test:
     def run(self) -> None:
         """ Method to run the particle optimization """
 
-        swarm = Swarm(objective_function=self.function, iterations=iterations, n_particles=particles, bounds=bounds)
+        swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
         swarm.optimize()
 
 
-#######################################################
-#################### Test Funtions ####################
-#######################################################
+#########################################################################################
+#################################### Test Functions #####################################
+#########################################################################################
 
 ### sphere function ###
 def function_0(x,y):
@@ -68,16 +68,16 @@ def function_5(x_0,x_1):
     f = -np.abs(np.sin(x_0)*np.cos(x_1)*np.exp(np.abs(1-np.sqrt(x_0**2+x_1**2)/np.pi)))
     return(f)
 
-#######################################################
+#######################################################################################
 
 
 def main() -> None:
-    test0 = Test(function_0).run()
-    test1 = Test(function_1).run()
-    test2 = Test(function_2).run()
-    test3 = Test(function_3).run()
-    test4 = Test(function_4).run()
-    test5 = Test(function_5).run()
+    Test(function_0).run()
+    #Test(function_1).run()
+    #Test(function_2).run()
+    #Test(function_3).run()
+    #Test(function_4).run()
+    #Test(function_5).run()
 
 
 

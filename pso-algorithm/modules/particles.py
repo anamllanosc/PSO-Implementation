@@ -1,3 +1,4 @@
+import numpy as np
 class Particle:
     #initialize with some predefined values
     def __init__(self, dim:int,bounds:float):
