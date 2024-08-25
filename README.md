@@ -23,12 +23,12 @@ National University of Colombia.
 ## 👾 Getting Started <a name = "getting_started"></a>
 
 ### 😒 Prerequisites 
-- For the base package:
-1. Numpy
-2. Matplotlib
+1. For the base package:
+    - Numpy
+    - Matplotlib
 
-- For the page deployment:
-1. Streamlit
+2. For the page deployment:
+    - Streamlit
 
 ### 🎩 Installing 
 1. Clone the repo:
