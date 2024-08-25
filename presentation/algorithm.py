@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import tempfile
 
 class Particle:
     def __init__(self, dim: int, bounds: float):
@@ -65,17 +66,11 @@ class Swarm:
         fig, ax = plt.subplots()
         ax.contour(X_0, X_1, Z, levels=35, cmap='RdGy')
         
-        for particle in self.particles:
-            particle.evaluate(self.objective_function)
-            particle.update_personal_best(self.optimization_method)
-        
-        all_x_positions = []
-        all_y_positions = []
-        
-        for i in range(self.iterations):
+        def update(frame):
+            ax.clear()
+            ax.contour(X_0, X_1, Z, levels=35, cmap='RdGy')
             x_positions = []
             y_positions = []
-            
             self.find_global_best()
             
             for particle in self.particles:
@@ -88,25 +83,23 @@ class Swarm:
                 x_positions.append(particle.position[0])
                 y_positions.append(particle.position[1])
             
-            all_x_positions.append(x_positions)
-            all_y_positions.append(y_positions)
-            
-            self.lineal_reduction_inertia(i)
-            
-            ax.clear()
-            ax.contour(X_0, X_1, Z, levels=35, cmap='RdGy')
             ax.scatter(x_positions, y_positions, s=10, c='b')
             ax.set_xlim(-self.bounds, self.bounds)
             ax.set_ylim(-self.bounds, self.bounds)
             ax.set_xlabel("x")
             ax.set_ylabel("y")
-            ax.set_title(f"Iteration: {i}")
+            ax.set_title(f"Iteration: {frame}")
             
-            st.pyplot(fig)
+            self.lineal_reduction_inertia(frame)
+            return ax.collections
         
-        st.write(f"Global best value: {self.global_best_value}")
-        st.write(f"Global best position: {self.global_best_position}")
-        st.write(f"Final inertia weight (w): {self.w}")
+        ani = animation.FuncAnimation(fig, update, frames=self.iterations, repeat=False)
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
+            ani.save(temp_file.name, writer='ffmpeg', fps=5)
+            video_path = temp_file.name
+
+        return video_path
 
 class Test:
     def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10) -> None:
@@ -118,7 +111,8 @@ class Test:
     def run(self) -> None:
         swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
-        swarm.optimize()
+        video_path = swarm.optimize()
+        st.video(video_path)
 
 #########################################################################################
 #################################### Test Functions #####################################
