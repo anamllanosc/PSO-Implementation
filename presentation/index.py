@@ -1,9 +1,6 @@
----
-title: PSO Algorithm
----
+import streamlit as st
 
-
-## 🛰️ Table of Contents
+"""## 🛰️ Table of Contents
 
 - [About](#about)
 - [Getting Started](#getting_started)
@@ -26,4 +23,4 @@ Here you will have the steps to install the project
 
 - [@anamllanosc](https://github.com/anamllanosc)
 - [@jorge9805](https://github.com/jorge9805)
-- [@estfloyd](https://github.com/estfloyd)
+- [@estfloyd](https://github.com/estfloyd)""""
