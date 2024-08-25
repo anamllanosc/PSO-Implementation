@@ -5,8 +5,8 @@ import streamlit as st
 ## Page Config ##
 #################
 st.set_page_config(
-    page_title="Unlock",
-    page_icon="static/dollar.png",
+    page_title="PSO-OOP",
+    #page_icon="static/dollar.png",
     layout="centered",
     initial_sidebar_state="auto",
 )
@@ -19,6 +19,6 @@ st.divider()
 ## Navigation ##
 pg = st.navigation([
     st.Page("presentation/index.py", title="Presentation", icon=":material/chat:"), 
-    st.Page("pso-algorithm/main.py", title="Algorithm", icon=":material/insights:")
+    st.Page("presentation/algorithm.py", title="Algorithm", icon=":material/insights:")
     ])
 pg.run()
