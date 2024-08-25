@@ -4,51 +4,30 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 class Particle:
-    #initialize with some predefined values
-    def __init__(self, dim:int,bounds:float):
-        #initialize the position of the particle with random values
-        self.position = np.random.uniform(-bounds,bounds,dim)
-        #limiting the position of the particle to the bounds
-        #initialize the velocity of the particle with random values
-        self.velocity = np.random.uniform(-bounds,bounds,dim)
-        #initialize the personal best position of the particle with random values
+    def __init__(self, dim: int, bounds: float):
+        self.position = np.random.uniform(-bounds, bounds, dim)
+        self.velocity = np.random.uniform(-bounds, bounds, dim)
         self.personal_best_position = np.zeros(dim)
-        #initialize the personal best value of the particle with random values
         self.personal_best_value = None
-        #initialize the value of the particle with random values
         self.value = None
-        #initialize the bounds of the particle
         self.bounds = bounds
-    def evaluate(self,objective_function):
-        #evaluate the value of the particle
+
+    def evaluate(self, objective_function):
         self.value = objective_function(*self.position)
 
-    def update_velocity(self, global_best_position:np.array,w:float,c1:float,c2:float,r1:np.array,r2:np.array):
-        #update the velocity of the particle
-        self.velocity = w*self.velocity + c1*r1*(self.personal_best_position-self.position) + c2*r2*(global_best_position-self.position)
+    def update_velocity(self, global_best_position: np.array, w: float, c1: float, c2: float, r1: np.array, r2: np.array):
+        self.velocity = w * self.velocity + c1 * r1 * (self.personal_best_position - self.position) + c2 * r2 * (global_best_position - self.position)
+
     def update_position(self):
-        #update the position of the particle
-        self.position = np.clip(self.position + self.velocity,-self.bounds,self.bounds)
-    def update_personal_best(self,optmimization_method:str="min"):
-        #update the personal best position and value of the particle
-        if self.personal_best_value == None:
+        self.position = np.clip(self.position + self.velocity, -self.bounds, self.bounds)
+
+    def update_personal_best(self, optimization_method: str = "min"):
+        if self.personal_best_value is None or (optimization_method == "min" and self.value < self.personal_best_value) or (optimization_method == "max" and self.value > self.personal_best_value):
             self.personal_best_value = self.value
             self.personal_best_position = self.position
-        elif optmimization_method == "min":
-            if self.personal_best_value > self.value:
-                self.personal_best_value = self.value
-                self.personal_best_position = self.position
-        elif optmimization_method == "max":
-            if self.personal_best_value < self.value:
-                self.personal_best_value = self.value
-                self.personal_best_position = self.position
-        # elif self.personal_best_value > self.value:
-        #     self.personal_best_value = self.value
-        #     self.personal_best_position = self.position
 
 class Swarm:
-    #initialize with some predefined values 
-    def __init__(self , n_particles:int=50, particles:list=[],dim:int=2,w_max:float=0.9 ,w_min:float=0.4, c1:float=2, c2:float=2, bounds:float=200, iterations:int=100, objective_function:callable=lambda x,y: x**2+y**2,optimization_method:str="min"):
+    def __init__(self, n_particles: int = 50, particles: list = [], dim: int = 2, w_max: float = 0.9, w_min: float = 0.4, c1: float = 2, c2: float = 2, bounds: float = 200, iterations: int = 100, objective_function: callable = lambda x, y: x**2 + y**2, optimization_method: str = "min"):
         self.objective_function = objective_function
         self.n_particles = n_particles
         self.dim = dim
@@ -59,122 +38,84 @@ class Swarm:
         self.c1 = c1
         self.c2 = c2
         self.bounds = bounds
-        self.global_best_position = np.repeat(None,dim)
+        self.global_best_position = np.full(dim, np.nan)
         self.global_best_value = None
         self.iterations = iterations
-        self.optmimization_method = optimization_method
-        # self.fig, self.ax = plt.subplots()
-        # self.data = []
-        
-    def lineal_reduction_inertia(self,iteration:int):
-        self.w=(self.w_max-self.w_min)*(self.iterations-iteration)/self.iterations+self.w_min
-        
-    def create_particles(self):
-        #initialize the particles
-        for i in range(self.n_particles):
-            self.particles.append(Particle(dim=self.dim,bounds=self.bounds))
-    def find_global_best(self):
-        #find the global best position of the particles
-        for particle in self.particles:
-            if self.global_best_value == None:
-                self.global_best_value = particle.personal_best_value
-                self.global_best_position = particle.personal_best_position        
-            elif self.optmimization_method == "min":
-                if self.global_best_value > particle.personal_best_value:
-                    self.global_best_value = particle.personal_best_value
-                    self.global_best_position = particle.personal_best_position
-            elif self.optmimization_method == "max":
-                if self.global_best_value < particle.personal_best_value:
-                    self.global_best_value = particle.personal_best_value
-                    self.global_best_position = particle.personal_best_position
+        self.optimization_method = optimization_method
 
-            # elif self.global_best_value > particle.personal_best_value:
-            #     self.global_best_value = particle.personal_best_value
-            #     self.global_best_position = particle.personal_best_position
+    def lineal_reduction_inertia(self, iteration: int):
+        self.w = (self.w_max - self.w_min) * (self.iterations - iteration) / self.iterations + self.w_min
+
+    def create_particles(self):
+        for i in range(self.n_particles):
+            self.particles.append(Particle(dim=self.dim, bounds=self.bounds))
+
+    def find_global_best(self):
+        for particle in self.particles:
+            if self.global_best_value is None or (self.optimization_method == "min" and particle.personal_best_value < self.global_best_value) or (self.optimization_method == "max" and particle.personal_best_value > self.global_best_value):
+                self.global_best_value = particle.personal_best_value
+                self.global_best_position = particle.personal_best_position
 
     def optimize(self):
-        #optimize the particles
-        #initialize the value, personal_best_position and personal_best_value of the particles
-        #points=ax.plot([],[],'o')
-        plt.x_label = "x"
-        plt.y_label = "y"
-        plt.title = "Particle Swarm Optimization"
-        x_0 = np.linspace(-self.bounds,self.bounds,100)
-        x_1 = np.linspace(-self.bounds,self.bounds,100)
-        X_0,X_1 = np.meshgrid(x_0,x_1)
-        Z = self.objective_function(X_0,X_1)
-        plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
+        x_0 = np.linspace(-self.bounds, self.bounds, 100)
+        x_1 = np.linspace(-self.bounds, self.bounds, 100)
+        X_0, X_1 = np.meshgrid(x_0, x_1)
+        Z = self.objective_function(X_0, X_1)
+        
+        fig, ax = plt.subplots()
+        ax.contour(X_0, X_1, Z, levels=35, cmap='RdGy')
+        
         for particle in self.particles:
             particle.evaluate(self.objective_function)
-            particle.update_personal_best(self.optmimization_method)
-            print("Particle value: ",particle.value)
+            particle.update_personal_best(self.optimization_method)
+        
+        all_x_positions = []
+        all_y_positions = []
+        
         for i in range(self.iterations):
             x_positions = []
             y_positions = []
-            x_y_positions = []
-            plt.clf()
+            
             self.find_global_best()
+            
             for particle in self.particles:
-                #r1,r2 is a np.array with dimension dim with random values between 0 and 1
-                r1 = np.random.uniform(0,1,self.dim)
-                r2 = np.random.uniform(0,1,self.dim)
-                particle.update_velocity(self.global_best_position,self.w,self.c1,self.c2,r1,r2)
+                r1 = np.random.uniform(0, 1, self.dim)
+                r2 = np.random.uniform(0, 1, self.dim)
+                particle.update_velocity(self.global_best_position, self.w, self.c1, self.c2, r1, r2)
                 particle.update_position()
                 particle.evaluate(self.objective_function)
-                particle.update_personal_best()
-                self.lineal_reduction_inertia(i)
+                particle.update_personal_best(self.optimization_method)
                 x_positions.append(particle.position[0])
                 y_positions.append(particle.position[1])
-                x_y_positions.append((x_positions,y_positions))
-            if i%1 == 0:
-                plt.text(30,57,"iteration: "+str(i))
-                plt.xlim(-self.bounds,self.bounds)
-                plt.ylim(-self.bounds,self.bounds)
-                plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
-                plt.scatter(x_positions,y_positions,s=10,c='b')
-                plt.pause(0.1)
-            if i == self.iterations-1:
-                plt.text(30,57,"iteration: "+str(i))
-                plt.xlim(-self.bounds,self.bounds)
-                plt.ylim(-self.bounds,self.bounds)
-                plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
-                plt.scatter(x_positions,y_positions,s=10,c='b' )
-                plt.pause(0.5)
-        print("Global best value: ",self.global_best_value)
-        print("Global best position: ",self.global_best_position)
-        print("w: ",self.w)
-        plt.show()
-
-
-            # print("Iteration: ",i, "particles",[x.value for x in self.particles])
-            # x_positions = [x.position[0] for x in self.particles]
-            # y_positions = [x.position[1] for x in self.particles]
-            #data.append((x_positions,y_positions))
-            # plt.scatter(x_positions,y_positions)
-            # plt.show()
-
+            
+            all_x_positions.append(x_positions)
+            all_y_positions.append(y_positions)
+            
+            self.lineal_reduction_inertia(i)
+            
+            ax.clear()
+            ax.contour(X_0, X_1, Z, levels=35, cmap='RdGy')
+            ax.scatter(x_positions, y_positions, s=10, c='b')
+            ax.set_xlim(-self.bounds, self.bounds)
+            ax.set_ylim(-self.bounds, self.bounds)
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            ax.set_title(f"Iteration: {i}")
+            
+            st.pyplot(fig)
+        
+        st.write(f"Global best value: {self.global_best_value}")
+        st.write(f"Global best position: {self.global_best_position}")
+        st.write(f"Final inertia weight (w): {self.w}")
 
 class Test:
-    """ Test object to run Pso Algorithm """
-
     def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10) -> None:
-        """
-        Initialize a new instance of a test
-        Arguments:
-            function: function to optimize
-            iterations(int): number of iterations to complete Algorithm
-            Particles(int): numer of particles to create
-            bounds(int): 
-        """
-
         self.function = function
         self.iterations = iterations
         self.particles = particles
         self.bounds = bounds
     
     def run(self) -> None:
-        """ Method to run the particle optimization """
-
         swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
         swarm.optimize()
@@ -222,10 +163,9 @@ def function_5(x_0,x_1):
 
 #######################################################################################
 
+functions = [function_0, function_1, function_2, function_3, function_4, function_5]
+option = st.selectbox("Which function do you want to optimize?", (0, 1, 2, 3, 4, 5))
 
-functions: list = [function_0, function_1, function_2, function_3, function_4, function_5]
-option = st.selectbox(
-    "Which function you want to optimize?",
-    (0, 1, 2, 3, 4, 5)
-)
-Test(function=functions[option]).run()
+if st.button("Run Optimization"):
+    Test(function=functions[option]).run()
+
