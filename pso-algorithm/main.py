@@ -29,7 +29,7 @@ def function_2(x_0,x_1):
     return(f)
 
 ### rastrigin function ###
-def function_3(x_0,x_1):
+def function_6(x_0,x_1):
     f = 20 + x_0**2 + x_1**2 - 10*(np.cos(2*np.pi*x_0)+np.cos(2*np.pi*x_1))
     return(f)
 
@@ -43,19 +43,22 @@ def function_5(x_0,x_1):
     f = -np.abs(np.sin(x_0)*np.cos(x_1)*np.exp(np.abs(1-np.sqrt(x_0**2+x_1**2)/np.pi)))
     return(f)
 
+def function_3(x, y):
+    f = (x + 2*y - 7)**2 + (2*x + y - 5)**2
+    return f
 #######################################################################################
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Pso algorithm")
     parser.add_argument("function", type=int, help="Function to optimize")
-    functions: list = [function_0, function_1, function_2, function_3, function_4, function_5]
+    functions: list = [function_0, function_1, function_2, function_3, function_4, function_5, function_6]
     try:
         Test(functions[parser.parse_args().function]).run()
 
     except IndexError:
         print("Invalid function number")
-        print("Valid functions are: 0, 1, 2, 3, 4, 5")
+        print("Valid functions are: 0, 1, 2, 3, 4, 5, 6")
 
 
 
