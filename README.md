@@ -16,24 +16,39 @@
 - [Class Diagram](#diagram)
 
 ## 📂 About <a name = "about"></a>
-
-PSO implementation using OOP
+This repo is for hosting the code of the Particle Swarm Optimization (PSO) algorithm. 
+Made as the finall project for the OOP course given by @fegonzalez7 at the 
+National University of Colombia.
 
 ## 👾 Getting Started <a name = "getting_started"></a>
 
 ### 😒 Prerequisites 
+1. For the base package:
+    - Numpy
+    - Matplotlib
 
-Soon you will see some prerequisites
+2. For the page deployment:
+    - Streamlit
 
 ### 🎩 Installing 
-
-Here you will have the steps to install the project
+1. Clone the repo:
+```bash
+git clone https://github.com/anamllanosc/PSO-Implementation.git
+```
+2. Install the requirements:
+```bash
+pip install -r requirements.txt
+```
+3. Run the main file:
+```bash
+python main.py
+```
 
 ## 🤵 Authors <a name = "authors"></a>
 
 - [@anamllanosc](https://github.com/anamllanosc)
 - [@jorge9805](https://github.com/jorge9805)
-- [@estfloyd](https://github.com/estfloyd)
+- [@dmeloca](https://github.com/dmeloca)
 
 ### 📰 Class Diagram <a name="diagram"></a>
 ```mermaid
