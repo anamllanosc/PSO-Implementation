@@ -19,6 +19,6 @@ st.divider()
 ## Navigation ##
 pg = st.navigation([
     st.Page("presentation/index.py", title="Presentation", icon=":material/chat:"), 
-    st.Page("pso-algorithm/pso.py", title="Algorithm", icon=":material/insights:")
+    st.Page("pso-algorithm/main.py", title="Algorithm", icon=":material/insights:")
     ])
 pg.run()
