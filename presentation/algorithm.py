@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import tempfile
 
+## To - Dos
+# 1. Make personalized function work
+# 2. write a description for each function
+# 3. Manage threads
+# 4. packege ogress bar
+
+
 class Particle:
     def __init__(self, dim: int, bounds: float):
         self.position = np.random.uniform(-bounds, bounds, dim)
@@ -153,7 +160,7 @@ def function_2(x_0, x_1):
     return f
 
 ### rastrigin function ###
-def function_3(x_0, x_1):
+def function_6(x_0, x_1):
     f = 20 + x_0**2 + x_1**2 - 10 * (np.cos(2 * np.pi * x_0) + np.cos(2 * np.pi * x_1))
     return f
 
@@ -167,9 +174,20 @@ def function_5(x_0, x_1):
     f = -np.abs(np.sin(x_0) * np.cos(x_1) * np.exp(np.abs(1 - np.sqrt(x_0**2 + x_1**2) / np.pi)))
     return f
 
+### Booth function ###
+def function_3(x, y):
+    f = (x + 2*y - 7)**2 + (2*x + y - 5)**2
+    return f
+
+## Personalized function ##
+def function_7(x_0, x_1, sale_price, waited_demand, total_products, storage_cost_per_product):
+    sale_gain = sale_price * np.minimum(x_0, waited_demand)
+    storage_cost = waited_demand * storage_cost_per_product
+    f = np.sum(sale_gain) - np.sum(storage_cost)
+    return f
 #######################################################################################
 
-functions = [function_0, function_1, function_2, function_3, function_4, function_5]
+functions = [function_0, function_1, function_2, function_3, function_4, function_5, function_6, function_7]
 
 st.markdown("## Particle Swarm Optimization functions")
 tab1, tab2 = st.tabs(["Functions", "Run"])
@@ -180,22 +198,47 @@ with tab1:
         st.write("#### 0. Sphere Function")
         st.write("#### 1. Function")
         st.write("#### 2. Ackley Function")
-
+        st.write("#### 3. Booth Function")
     with col21: 
-        st.write("#### 3. Rastrigin Function")
-        st.write("#### 4. Rosenbrock Function")
-        st.write("#### 5. Holder Table Function")
+        st.write("#### 4. Rastrigin Function")
+        st.write("#### 5. Rosenbrock Function")
+        st.write("#### 6. Holder Table Function")
+        st.write("#### 7. Personalized Function")
 with tab2:
+    values: dict = {
+        "0 - Sphere": 0,
+        "1 - Function": 1,
+        "2 - Ackley": 2,
+        "3 - Booth": 3,
+        "4 - Rastrigin": 4,
+        "5 - Rosenbrock": 5,
+        "6 - Holder Table": 6,
+        "7 - Personalized": 7
+            }
     col12, col22 = st.columns(2)
     with col12:
         st.write("### Select Function")
-        option = st.selectbox("Which function do you want to optimize?", (0, 1, 2, 3, 4, 5))
+        option = st.selectbox("Which function do you want to optimize?", ("0 - Sphere", "1 - Function", "2 - Ackley" , "3 - Booth", "4 -  Rastring", "5 - Rosenbrock", "6 - Holder Table", "7 - Personalized"))
+        option = values[option]
     with col22:
         st.write("### Parameters")
         iterations = st.number_input("Iterations", value=100)
         particles = st.number_input("Particles", value=200)
         bounds = st.number_input("Bounds", value=10)
+        
+        if option == 7:  # For function_6, which has additional parameters
+            with st.popover("Personalized Function"):
+                sale_price = st.number_input("Sale Price", value=0)
+                waited_demand = st.number_input("Waited Demand", value=0)
+                total_products = st.number_input("Total Products", value=0)
+                storage_cost_per_product = st.number_input("Storage Cost per Product", value=0)
+        else:
+            sale_price = waited_demand = total_products = storage_cost_per_product = None
+
     st.divider()
     if st.button("Run Optimization"):
-        Test(function=functions[option], iterations= iterations, particles= particles, bounds= bounds).run()
- 
+        function_to_run = functions[option]
+        if option == 7:
+            function_to_run = lambda x, y: function_6(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
+        Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
+
