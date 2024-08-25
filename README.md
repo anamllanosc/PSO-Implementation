@@ -43,6 +43,10 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
+4. Run GUI:
+```bash
+streamlit run app.py
+```
 
 ## 🤵 Authors <a name = "authors"></a>
 
