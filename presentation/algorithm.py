@@ -57,7 +57,7 @@ class Swarm:
                 self.global_best_value = particle.personal_best_value
                 self.global_best_position = particle.personal_best_position
 
-    def optimize(self):
+    def optimize(self, progress_callback=None):
         x_0 = np.linspace(-self.bounds, self.bounds, 100)
         x_1 = np.linspace(-self.bounds, self.bounds, 100)
         X_0, X_1 = np.meshgrid(x_0, x_1)
@@ -91,6 +91,11 @@ class Swarm:
             ax.set_title(f"Iteration: {frame}")
             
             self.lineal_reduction_inertia(frame)
+            
+            # Update progress bar
+            if progress_callback:
+                progress_callback(frame / self.iterations)
+            
             return ax.collections
         
         ani = animation.FuncAnimation(fig, update, frames=self.iterations, repeat=False)
@@ -99,7 +104,7 @@ class Swarm:
             ani.save(temp_file.name, writer='ffmpeg', fps=5)
             video_path = temp_file.name
 
-        return video_path
+        return video_path, self.global_best_position, self.global_best_value
 
 class Test:
     def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10) -> None:
@@ -111,55 +116,86 @@ class Test:
     def run(self) -> None:
         swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
-        video_path = swarm.optimize()
+        
+        # Display progress bar
+        progress_bar = st.progress(0)
+        
+        def update_progress(progress):
+            progress_bar.progress(int(progress * 100))
+        
+        video_path, best_position, best_value = swarm.optimize(progress_callback=update_progress)
         st.video(video_path)
+        
+        # Display the best result
+        st.write("Best Position Found:", best_position)
+        st.write("Best Value Found:", best_value)
 
 #########################################################################################
 #################################### Test Functions #####################################
 #########################################################################################
 
 ### sphere function ###
-def function_0(x,y):
-    return x**2+y**2         
-#function from https://cienciadedatos.net/documentos/py02_optimizacion_pso
+def function_0(x, y):
+    return x**2 + y**2
 
 ### Function ###
-def function_1(x_0,x_1):
-    #Para la región acotada entre −10<=x_0<=0 y −6.5<=x_1<=0 la función tiene
-    #múltiples mínimos locales y un único minimo global que se encuentra en
-    #f(−3.1302468,−1.5821422) = −106.7645367
-    f= np.sin(x_1)*np.exp(1-np.cos(x_0))**2 \
-        + np.cos(x_0)*np.exp(1-np.sin(x_1))**2 \
-        + (x_0-x_1)**2
-    return(f)
+def function_1(x_0, x_1):
+    f = np.sin(x_1) * np.exp(1 - np.cos(x_0))**2 \
+        + np.cos(x_0) * np.exp(1 - np.sin(x_1))**2 \
+        + (x_0 - x_1)**2
+    return f
 
-#### ackely function ###
-def function_2(x_0,x_1):
-    f = -20*np.exp(-0.2*np.sqrt(0.5*(x_0**2+x_1**2))) \
-        - np.exp(0.5*(np.cos(2*np.pi*x_0)+np.cos(2*np.pi*x_1))) \
+#### ackley function ###
+def function_2(x_0, x_1):
+    f = -20 * np.exp(-0.2 * np.sqrt(0.5 * (x_0**2 + x_1**2))) \
+        - np.exp(0.5 * (np.cos(2 * np.pi * x_0) + np.cos(2 * np.pi * x_1))) \
         + np.e + 20
-    return(f)
+    return f
 
 ### rastrigin function ###
-def function_3(x_0,x_1):
-    f = 20 + x_0**2 + x_1**2 - 10*(np.cos(2*np.pi*x_0)+np.cos(2*np.pi*x_1))
-    return(f)
+def function_3(x_0, x_1):
+    f = 20 + x_0**2 + x_1**2 - 10 * (np.cos(2 * np.pi * x_0) + np.cos(2 * np.pi * x_1))
+    return f
 
 ### rosenbrock function ###
-def function_4(x_0,x_1):
-    f = 100*(x_1-x_0**2)**2 + (1-x_0)**2
-    return(f)
+def function_4(x_0, x_1):
+    f = 100 * (x_1 - x_0**2)**2 + (1 - x_0)**2
+    return f
 
 ### holder table function ###
-def function_5(x_0,x_1):
-    f = -np.abs(np.sin(x_0)*np.cos(x_1)*np.exp(np.abs(1-np.sqrt(x_0**2+x_1**2)/np.pi)))
-    return(f)
+def function_5(x_0, x_1):
+    f = -np.abs(np.sin(x_0) * np.cos(x_1) * np.exp(np.abs(1 - np.sqrt(x_0**2 + x_1**2) / np.pi)))
+    return f
 
 #######################################################################################
 
 functions = [function_0, function_1, function_2, function_3, function_4, function_5]
-option = st.selectbox("Which function do you want to optimize?", (0, 1, 2, 3, 4, 5))
 
-if st.button("Run Optimization"):
-    Test(function=functions[option]).run()
+st.markdown("## Particle Swarm Optimization functions")
+tab1, tab2 = st.tabs(["Functions", "Run"])
+with tab1:
+    st.write("### Functions")
+    col11, col21 = st.columns(2)
+    with col11:
+        st.write("#### 0. Sphere Function")
+        st.write("#### 1. Function")
+        st.write("#### 2. Ackley Function")
 
+    with col21: 
+        st.write("#### 3. Rastrigin Function")
+        st.write("#### 4. Rosenbrock Function")
+        st.write("#### 5. Holder Table Function")
+with tab2:
+    col12, col22 = st.columns(2)
+    with col12:
+        st.write("### Select Function")
+        option = st.selectbox("Which function do you want to optimize?", (0, 1, 2, 3, 4, 5))
+    with col22:
+        st.write("### Parameters")
+        iterations = st.number_input("Iterations", value=100)
+        particles = st.number_input("Particles", value=200)
+        bounds = st.number_input("Bounds", value=10)
+    st.divider()
+    if st.button("Run Optimization"):
+        Test(function=functions[option], iterations= iterations, particles= particles, bounds= bounds).run()
+ 
