@@ -1,5 +1,6 @@
 import numpy as np
 from modules.test import Test
+import argparse
 
 #########################################################################################
 #################################### Test Functions #####################################
@@ -46,12 +47,15 @@ def function_5(x_0,x_1):
 
 
 def main() -> None:
-    Test(function_0).run()
-    #Test(function_1).run()
-    #Test(function_2).run()
-    #Test(function_3).run()
-    #Test(function_4).run()
-    #Test(function_5).run()
+    parser = argparse.ArgumentParser(description="Pso algorithm")
+    parser.add_argument("function", type=int, help="Function to optimize")
+    functions: list = [function_0, function_1, function_2, function_3, function_4, function_5]
+    try:
+        Test(functions[parser.parse_args().function]).run()
+
+    except IndexError:
+        print("Invalid function number")
+        print("Valid functions are: 0, 1, 2, 3, 4, 5")
 
 
 
