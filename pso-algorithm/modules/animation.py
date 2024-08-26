@@ -15,11 +15,11 @@ class Animation:
         ax = fig.add_subplot(111, projection='3d')
         ax.plot_surface(self.x,self.y,self.z)
         plt.show()
-    def animateCountour(self,cmap='viridis'):
+    def animateCountour(self,cmap='RdYlGn'):
         plt.contour(self.x,self.y,self.z,levels=4*self.bounds,cmap=cmap)
-    def animateScatter(self,size=2,color='black'):
+    def animateScatter(self,size=2,color='b'):
         plt.scatter(self.x_positions,self.y_positions,s=size,c=color,zorder=10)
-    def animate(self,velocity=5,cmap="viridis",size=2,color='black'):
+    def animate(self,velocity=5,cmap='RdYlGn',size=2,color='b'):
         plt.xlim(-self.bounds,self.bounds)
         plt.ylim(-self.bounds,self.bounds)
         self.animateCountour(cmap=cmap)
