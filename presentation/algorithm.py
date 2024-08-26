@@ -113,14 +113,16 @@ class Swarm:
         return video_path, self.global_best_position, self.global_best_value
 
 class Test:
-    def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10) -> None:
+    def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10, individual_inertia: int = 2, social_inertia: int = 2) -> None:
         self.function = function
         self.iterations = iterations
         self.particles = particles
         self.bounds = bounds
+        self.social_inertia = social_inertia
+        self.individual_inertia = individual_inertia
     
     def run(self) -> tuple:
-        swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
+        swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds, c1=self.individual_inertia, c2=self.social_inertia)
         swarm.create_particles()
         
         # Display progress bar
@@ -224,15 +226,22 @@ with tab2:
         iterations = st.number_input("Iterations", value=100)
         particles = st.number_input("Particles", value=200)
         bounds = st.number_input("Bounds", value=10)
-        
-        if option == 7:  # For function_7, which has additional parameters
-            with st.expander("Personalized Function"):
-                sale_price = st.number_input("Sale Price", value=0)
-                waited_demand = st.number_input("Waited Demand", value=0)
-                total_products = st.number_input("Total Products", value=0)
-                storage_cost_per_product = st.number_input("Storage Cost per Product", value=0)
-        else:
-            sale_price = waited_demand = total_products = storage_cost_per_product = None
+        col1, col2 = st.columns(2)
+        with col1:
+            if option == 7:  # For function_7, which has additional parameters
+                with st.expander("Personalized Function"):
+                    sale_price = st.number_input("Sale Price", value=0)
+                    waited_demand = st.number_input("Waited Demand", value=0)
+                    total_products = st.number_input("Total Products", value=0)
+                    storage_cost_per_product = st.number_input("Storage Cost per Product", value=0)
+            else:
+                st.empty()
+                sale_price = waited_demand = total_products = storage_cost_per_product = None
+        with col2:
+            with st.expander("More configurations"):
+                individual_inertia = st.number_input("Individual Inertia", value=2)
+                social_inertia = st.number_input("Social Inertia", value=2)
+
 
     st.divider()
 
