@@ -5,10 +5,9 @@ import matplotlib.animation as animation
 import tempfile
 
 ## To - Dos
-# 1. Make personalized function work
-# 2. write a description for each function
-# 3. Manage threads
-# 4. packege ogress bar
+# 1. Make personalized function work (Ana)
+# 2. write a description for each function (Ana)
+# 3. Make work the personalized function (Jorge)
 
 
 class Particle:
@@ -120,23 +119,20 @@ class Test:
         self.particles = particles
         self.bounds = bounds
     
-    def run(self) -> None:
+    def run(self) -> tuple:
         swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
         
+
         # Display progress bar
-        progress_bar = st.progress(0)
+        progress_bar = st.progress(0, text="Optimizing...")
         
         def update_progress(progress):
-            progress_bar.progress(int(progress * 100))
+            progress_bar.progress(int(progress * 100), text=f"Optimizing... {int(progress * 100)}%")
         
         video_path, best_position, best_value = swarm.optimize(progress_callback=update_progress)
-        st.video(video_path)
-        
-        # Display the best result
-        st.write("Best Position Found:", best_position)
-        st.write("Best Value Found:", best_value)
-
+        progress_bar.empty()
+        return video_path, best_position, best_value
 #########################################################################################
 #################################### Test Functions #####################################
 #########################################################################################
@@ -218,7 +214,10 @@ with tab2:
     col12, col22 = st.columns(2)
     with col12:
         st.write("### Select Function")
-        option = st.selectbox("Which function do you want to optimize?", ("0 - Sphere", "1 - Function", "2 - Ackley" , "3 - Booth", "4 -  Rastring", "5 - Rosenbrock", "6 - Holder Table", "7 - Personalized"))
+        option = st.selectbox("Which function do you want to optimize?", 
+                              ("0 - Sphere", "1 - Function", "2 - Ackley" , 
+                               "3 - Booth", "4 -  Rastring", "5 - Rosenbrock", 
+                               "6 - Holder Table", "7 - Personalized"))
         option = values[option]
     with col22:
         st.write("### Parameters")
@@ -236,9 +235,16 @@ with tab2:
             sale_price = waited_demand = total_products = storage_cost_per_product = None
 
     st.divider()
+
     if st.button("Run Optimization"):
         function_to_run = functions[option]
         if option == 7:
             function_to_run = lambda x, y: function_6(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
-        Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
+        video_path, best_position, best_value = Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
 
+    with st.expander("Results"):
+        st.success(f"Function Optimized", icon="✅")
+        st.video(video_path)
+        st.write(f"Best value found: ", best_value)
+        st.write(f"Best position found: ", best_position)
+        
