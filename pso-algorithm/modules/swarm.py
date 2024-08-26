@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from modules.particles import Particle
+from modules.animation import Animation
 
 
 class Swarm:
@@ -61,11 +62,14 @@ class Swarm:
         x_1 = np.linspace(-self.bounds,self.bounds,100)
         X_0,X_1 = np.meshgrid(x_0,x_1)
         Z = self.objective_function(X_0,X_1)
-        plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
+        #animation = Animation(self.bounds,self.objective_function)
+        #animation.animate()
+        #plt.imshow(Z,extent=[-self.bounds,self.bounds,-self.bounds,self.bounds],origin='lower',cmap='RdGy')
+        #plt.contour(X_0,X_1,Z,levels=35,cmap='Accent')
         for particle in self.particles:
             particle.evaluate(self.objective_function)
             particle.update_personal_best(self.optmimization_method)
-            print("Particle value: ",particle.value)
+            #print("Particle value: ",particle.value)
         for i in range(self.iterations):
             x_positions = []
             y_positions = []
@@ -84,24 +88,31 @@ class Swarm:
                 x_positions.append(particle.position[0])
                 y_positions.append(particle.position[1])
                 x_y_positions.append((x_positions,y_positions))
-            if i%1 == 0:
-                plt.text(30,57,"iteration: "+str(i))
-                plt.xlim(-self.bounds,self.bounds)
-                plt.ylim(-self.bounds,self.bounds)
-                plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
-                plt.scatter(x_positions,y_positions,s=10,c='b')
-                plt.pause(0.1)
-            if i == self.iterations-1:
-                plt.text(30,57,"iteration: "+str(i))
-                plt.xlim(-self.bounds,self.bounds)
-                plt.ylim(-self.bounds,self.bounds)
-                plt.contour(X_0,X_1,Z,levels=35,cmap='RdGy')
-                plt.scatter(x_positions,y_positions,s=10,c='b' )
-                plt.pause(0.5)
+            animation = Animation(self.bounds,self.objective_function,x_positions,y_positions)  
+            animation.animate(velocity=1)
+            # if i%1 == 0:
+            #     plt.text(30,57,"iteration: "+str(i))
+            #     plt.xlim(-self.bounds,self.bounds)
+            #     plt.ylim(-self.bounds,self.bounds)
+            #     plt.contour(X_0,X_1,Z,levels=4*self.bounds,cmap='viridis')
+            #     plt.scatter(x_positions,y_positions,s=2,c='b', zorder=10)
+            #     plt.pause(1)
+            # if i == self.iterations-1:
+            #     plt.text(30,57,"iteration: "+str(i))
+            #     plt.xlim(-self.bounds,self.bounds)
+            #     plt.ylim(-self.bounds,self.bounds)
+            #     plt.contour(X_0,X_1,Z,levels=4*self.bounds,cmap='viridis')
+            #     plt.scatter(x_positions,y_positions,s=2,c='b',zorder=10)
+            #     #plt.imshow(Z,extent=[-self.bounds,self.bounds,-self.bounds,self.bounds],origin='lower',cmap='RdGy')
+            #     #plt.pause(0.5)
         print("Global best value: ",self.global_best_value)
         print("Global best position: ",self.global_best_position)
         print("w: ",self.w)
-        plt.show()
+        animation.show()
+        # plt.show()
+
+                
+
 
 
             # print("Iteration: ",i, "particles",[x.value for x in self.particles])

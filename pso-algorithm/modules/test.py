@@ -3,7 +3,7 @@ from modules.swarm import Swarm
 class Test:
     """ Test object to run Pso Algorithm """
 
-    def __init__(self, function, iterations: int = 100, particles: int = 200, bounds: int = 10) -> None:
+    def __init__(self, function, iterations: int = 10, particles: int = 200, bounds: int = 10) -> None:
         """
         Initialize a new instance of a test
         Arguments:
