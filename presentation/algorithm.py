@@ -244,6 +244,6 @@ with tab2:
 
         with st.expander("Results"):
             st.success(f"Function Optimized", icon="✅")
-            st.video(video_path)
+            st.video(video_path, format="video/mp4")
             st.write(f"Best value found: ", best_value)
             st.write(f"Best position found: ", best_position)
