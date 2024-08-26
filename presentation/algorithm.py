@@ -241,9 +241,10 @@ with tab2:
         if option == 7:
             function_to_run = lambda x, y: function_6(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
         video_path, best_position, best_value = Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
-
+        video_file = open(video_path, "rb")
+        video_bytes = video_file.read()
         with st.expander("Results"):
             st.success(f"Function Optimized", icon="✅")
-            st.video(video_path, format="video/mp4")
+            st.video(video_bytes)
             st.write(f"Best value found: ", best_value)
             st.write(f"Best position found: ", best_position)
