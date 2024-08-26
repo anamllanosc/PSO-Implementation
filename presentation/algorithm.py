@@ -3,12 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import tempfile
-
-## To - Dos
-# 1. Make personalized function work (Ana)
-# 2. write a description for each function (Ana)
-# 3. Make work the personalized function (Jorge)
-
+from PIL import Image
 
 class Particle:
     def __init__(self, dim: int, bounds: float):
@@ -106,10 +101,15 @@ class Swarm:
         
         ani = animation.FuncAnimation(fig, update, frames=self.iterations, repeat=False)
         
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
-            ani.save(temp_file.name, writer='ffmpeg', fps=5)
-            video_path = temp_file.name
+        # Save animation as GIF
+        def save_animation_as_gif(ani, fps=5):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".gif") as temp_file:
+                temp_file.close()
+                ani.save(temp_file.name, writer='pillow', fps=fps)
+                return temp_file.name
 
+        video_path = save_animation_as_gif(ani)
+        
         return video_path, self.global_best_position, self.global_best_value
 
 class Test:
@@ -123,7 +123,6 @@ class Test:
         swarm = Swarm(objective_function=self.function, iterations=self.iterations, n_particles=self.particles, bounds=self.bounds)
         swarm.create_particles()
         
-
         # Display progress bar
         progress_bar = st.progress(0, text="Optimizing...")
         
@@ -133,6 +132,7 @@ class Test:
         video_path, best_position, best_value = swarm.optimize(progress_callback=update_progress)
         progress_bar.empty()
         return video_path, best_position, best_value
+
 #########################################################################################
 #################################### Test Functions #####################################
 #########################################################################################
@@ -181,8 +181,8 @@ def function_7(x_0, x_1, sale_price, waited_demand, total_products, storage_cost
     storage_cost = waited_demand * storage_cost_per_product
     f = np.sum(sale_gain) - np.sum(storage_cost)
     return f
-#######################################################################################
 
+#########################################################################################
 functions = [function_0, function_1, function_2, function_3, function_4, function_5, function_6, function_7]
 
 st.markdown("## Particle Swarm Optimization functions")
@@ -216,7 +216,7 @@ with tab2:
         st.write("### Select Function")
         option = st.selectbox("Which function do you want to optimize?", 
                               ("0 - Sphere", "1 - Function", "2 - Ackley" , 
-                               "3 - Booth", "4 -  Rastring", "5 - Rosenbrock", 
+                               "3 - Booth", "4 - Rastrigin", "5 - Rosenbrock", 
                                "6 - Holder Table", "7 - Personalized"))
         option = values[option]
     with col22:
@@ -225,8 +225,8 @@ with tab2:
         particles = st.number_input("Particles", value=200)
         bounds = st.number_input("Bounds", value=10)
         
-        if option == 7:  # For function_6, which has additional parameters
-            with st.popover("Personalized Function"):
+        if option == 7:  # For function_7, which has additional parameters
+            with st.expander("Personalized Function"):
                 sale_price = st.number_input("Sale Price", value=0)
                 waited_demand = st.number_input("Waited Demand", value=0)
                 total_products = st.number_input("Total Products", value=0)
@@ -239,12 +239,13 @@ with tab2:
     if st.button("Run Optimization"):
         function_to_run = functions[option]
         if option == 7:
-            function_to_run = lambda x, y: function_6(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
+            function_to_run = lambda x, y: function_7(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
         video_path, best_position, best_value = Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
         video_file = open(video_path, "rb")
         video_bytes = video_file.read()
         with st.expander("Results"):
             st.success(f"Function Optimized", icon="✅")
-            st.video(video_bytes)
+            st.image(video_bytes, use_column_width=True)
             st.write(f"Best value found: ", best_value)
             st.write(f"Best position found: ", best_position)
+
