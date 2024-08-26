@@ -7,7 +7,7 @@ import streamlit as st
 st.set_page_config(
     page_title="PSO-OOP",
     #page_icon="static/dollar.png",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="auto",
 )
 
