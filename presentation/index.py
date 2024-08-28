@@ -1,55 +1,48 @@
 import streamlit as st
-""" ## Introduction"""
-col1, col2, col3 = st.columns(3)
+import matplotlib.pyplot as plt
+import numpy as np
 
-with col1:
-    """
-### What is?
-Es un algoritmo de optimización inteligente inspirado en el comportamiento de animales en grupo. Esta orientado a encontrar máximos o mínimo globales.
+st.title("Optimización por Enjambre de Partículas (PSO)")
 
-- Cooperación de los medios.
+# Introducción
+st.header("¿Qué es PSO?")
+st.write("""
+Es un algoritmo de optimización inspirado en el comportamiento de animales en grupo, como aves y peces. Está orientado a encontrar los máximos o mínimos globales en un espacio de búsqueda.
 
-La optimización por enjambre de partículas contiene una población de soluciones factibles llamadas enjambre, por lo que se tiene un enjambre de soluciones llamadas partículas. El movimiento de cada individuo (variación de dirección, velocidad y aceleración), se da a partir de las decisiones anteriores y comportamiento del resto.
+- **Cooperación de los agentes:** 
+  El PSO utiliza un enjambre de partículas (soluciones) que se mueven en el espacio de búsqueda. Cada partícula ajusta su dirección y velocidad basándose en su propia experiencia y la de sus vecinos.
 
-El PSO busca la solución factible al problema de optimización que vamos a resolver. 
+- **Objetivo:** Encontrar la mejor solución en el espacio de búsqueda.
+""")
 
-- Toda partícula tiene una posición en el espacio de búsqueda.
-- El espacio es el conjunto de todas las posibles soluciones a la optimización.
+# Imagen de PSO
+st.image("https://raw.githubusercontent.com/keurfonluu/stochopy/master/.github/sample.gif", caption='Ejemplo de movimiento de partículas en PSO', width= 1000)
 
-**Objetivo** --> Encontrar la mejor solución de todo ese espacio.
-"""
-with col2:
-    """### Steps
-1. **Creación del enjambre inicial:** 
-    
-    - Posición: Determinada combinación de valores de las variables.
-    
-    - Velocidad: Indica como y hacia donde se desplaza la partícula
-    
-    - Registro: Registro de la mejor posición que ha tenido la partícula hasta el momento.
-    
+# Pasos del algoritmo
+st.header("Pasos del Algoritmo")
+st.write("""
+1. **Creación del enjambre inicial:**
+   - **Posición:** Combinación de valores de las variables.
+   - **Velocidad:** Indica el desplazamiento de la partícula.
+   - **Registro:** Mejor posición obtenida por la partícula hasta el momento.
 
-2. **Evaluar cada partícula con la función objetivo.**
-    
-    - Calcular el valor de la función objetivo en la posición que ocupa la partícula en ese momento.
-    
+2. **Evaluación:** Calcula el valor de la función objetivo en la posición actual de cada partícula.
 
 3. **Actualización:**
-    
-    - Se actualizan los valores de la posición y la velocidad en función de la posición donde ha obtenido mejores resultados hasta el momento y la mejor posición encontrada por el enjambre hasta el momento.
-"""
-    st.latex("vi(t+1)=wvi(t)+c1r1[x^i(t)-xi(t)]+c2r2[g(t)-xi(t)]")
-    st.latex("xi(t+1)=xi(t)+vi(t+1)")
+   - Actualiza la posición y velocidad según la mejor posición personal y global.
+""")
 
-with col3:
-    """
-### History
+# Fórmulas
+st.latex(r"v_i(t+1) = wv_i(t) + c_1r_1[x^i(t) - x_i(t)] + c_2r_2[g(t) - x_i(t)]")
+st.latex(r"x_i(t+1) = x_i(t) + v_i(t+1)")
 
-El algoritmo de Optimización por Enjambre de Partículas (PSO) fue propuesto por James Kennedy y Russell Eberhart en 1995. Inspirado en el comportamiento de enjambres de animales, como aves y peces, PSO simula el movimiento grupal para encontrar soluciones a problemas de optimización. La primera publicación sobre PSO, presentada en el IEEE International Conference on Neural Networks en 1995, introdujo el algoritmo y sus aplicaciones iniciales.
+# Historia
+st.header("Historia")
+st.write("""
+El algoritmo de PSO fue introducido por James Kennedy y Russell Eberhart en 1995. Inspirado en el comportamiento de enjambres de animales, PSO simula el movimiento grupal para resolver problemas de optimización.
 
-En 1997, Kennedy y Eberhart publicaron una versión extendida en su libro "Swarm Intelligence", profundizando en los detalles y mejorando el algoritmo. A finales de la década de 1990 y principios de 2000, PSO se consolidó con variantes que abordaron problemas de convergencia y exploración.
-
-En la última década, PSO ha continuado evolucionando con mejoras en eficiencia y precisión, y se ha aplicado a problemas complejos en diversas áreas, incluyendo optimización multidimensional y ajuste de parámetros en redes neuronales. La investigación actual sigue explorando nuevas variantes y aplicaciones para abordar desafíos emergentes.
-
-    """
-
+- **1995:** Publicación inicial en la IEEE International Conference on Neural Networks.
+- **1997:** Expansión en el libro "Swarm Intelligence".
+- **Finales de 1990 y 2000s:** Consolidación y variantes del algoritmo.
+- **Última década:** Mejora continua y aplicaciones en problemas complejos.
+""")

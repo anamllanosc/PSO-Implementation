@@ -178,10 +178,8 @@ def function_3(x, y):
     return f
 
 ## Personalized function ##
-def function_7(x_0, x_1, sale_price, waited_demand, total_products, storage_cost_per_product):
-    sale_gain = sale_price * np.minimum(x_0, waited_demand)
-    storage_cost = waited_demand * storage_cost_per_product
-    f = np.sum(sale_gain) - np.sum(storage_cost)
+def function_7(x: int, height: int, weith: int):
+    f = (height, 2*x)*(weith-2*x)*X
     return f
 
 #########################################################################################
@@ -194,14 +192,72 @@ with tab1:
     col11, col21 = st.columns(2)
     with col11:
         st.write("#### 0. Sphere Function")
+        """
+                - Es una función cuadrática simple y convexa que se utiliza para probar algoritmos de optimización en espacios sin complejidad significativa.
+                - Grafico:
+        """
+        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Sphere_contour.svg/200px-Sphere_contour.svg.png", width=400)
+        """
+                - Mínimo Global:
+        """
+        st.latex("f(x_{1}, x_{2}, \cdots, x_{n}) = f(0, \cdots, 0) = 0")
         st.write("#### 1. Function")
         st.write("#### 2. Ackley Function")
+        """
+                - Es una función no convexa que se utiliza para probar la capacidad de los algoritmos de escapar de mínimos locales. Tiene muchas oscilaciones, pero un único mínimo global en el origen. Es un desafío debido a su paisaje rugoso, que puede dificultar la convergencia de los algoritmos.
+                - Grafico"""
+        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Ackley_2d.png/300px-Ackley_2d.png", width=400)
+        """
+                - Mínimo Global:
+        """
+        st.latex("f(0, 0) = 0")
         st.write("#### 3. Booth Function")
+        """
+                - Es una función bidimensional con un mínimo global en un punto específico, también usada para probar la precisión de los algoritmos en un entorno más simple.
+                - Grafico:"""
+        
+        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Booth_contour.svg/200px-Booth_contour.svg.png", width=400)
+        """
+                - Mínimo Global:
+        """
+        st.latex("f(1,3)=0")
     with col21: 
         st.write("#### 4. Rastrigin Function")
+        """
+                - Es muy usada para probar la robustez de los algoritmos debido a sus múltiples mínimos locales distribuidos uniformemente.
+                - Grafico:
+        """
+        st.image("https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png", width=400)
+        """
+                - Mínimo Global:
+        """
+        st.latex("f(0, \cdots, 0) = 0")
         st.write("#### 5. Rosenbrock Function")
+        """
+        - Conocida como la función del "valle", tiene un único mínimo global en el que los algoritmos deben encontrar un camino a lo largo de un valle estrecho y curvado. Es útil para probar la precisión de los algoritmos en problemas de optimización no lineales.
+        - Grafico:
+        """
+        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Rosenbrock3.gif/300px-Rosenbrock3.gif", width=400)
+        """
+        """
+        #st.latex()
         st.write("#### 6. Holder Table Function")
+        """
+        - Esta función es multimodal con varios mínimos globales. Es desafiante para los algoritmos porque tiene un paisaje complicado con muchos mínimos locales, además de que su función objetivo incluye términos exponenciales y trigonométricos.
+        - Grafico:
+        """
+        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Hoelder_table_contour.svg/1280px-Hoelder_table_contour.svg.png", width=400)
         st.write("#### 7. Personalized Function")
+        """
+            - La caja abierta se fabricará de 24 cm por 36 cm de cartón quitando un cuadrado de cada esquina de la caja y doblando las solapas de cada lado. ¿De qué tamaño es el cuadrado que hay que cortar en cada esquina para obtener una caja con el máximo volumen?
+            - Volumen= longitud*ancho*alto
+            - La altura de la caja es X cm
+            - H= La longitud es de 36-2x cm (Altura del rectángulo menos dos veces la altura de la caja (el lado de la esquina que se quita) )
+            - A= El ancho es de 24-2x cm ( Ancho del rectángulo menos dos veces la altura de la caja (el lado de la esquina que se quita)  )
+            - Volumen de la caja
+        """
+        st.latex("V(x)=(36-2x)(24-2x)x=4x³-120x²+864x.")
+        st.latex("V(x)=(H-2x)(A-2x)x= (HA)x-(2A + 2H)x²+4x³")
 with tab2:
     values: dict = {
         "0 - Sphere": 0,
@@ -230,10 +286,8 @@ with tab2:
         with col1:
             if option == 7:  # For function_7, which has additional parameters
                 with st.expander("Personalized Function"):
-                    sale_price = st.number_input("Sale Price", value=0)
-                    waited_demand = st.number_input("Waited Demand", value=0)
-                    total_products = st.number_input("Total Products", value=0)
-                    storage_cost_per_product = st.number_input("Storage Cost per Product", value=0)
+                    waited_demand = st.number_input("Height", value=0)
+                    total_products = st.number_input("width", value=0)
             else:
                 st.empty()
                 sale_price = waited_demand = total_products = storage_cost_per_product = None
@@ -248,7 +302,7 @@ with tab2:
     if st.button("Run Optimization"):
         function_to_run = functions[option]
         if option == 7:
-            function_to_run = lambda x, y: function_7(x, y, sale_price, waited_demand, total_products, storage_cost_per_product)
+            function_to_run = lambda x, y: function_7(x, height, weith)
         video_path, best_position, best_value = Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
         video_file = open(video_path, "rb")
         video_bytes = video_file.read()
