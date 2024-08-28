@@ -257,4 +257,3 @@ with tab2:
             st.image(video_bytes, use_column_width=True)
             st.write(f"Best value found: ", best_value)
             st.write(f"Best position found: ", best_position)
-
