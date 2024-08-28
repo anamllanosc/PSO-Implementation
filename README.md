@@ -52,48 +52,64 @@ python main.py
 
 ### 📰 Class Diagram <a name="diagram"></a>
 ```mermaid
+
 classDiagram
-    Particle *--Enjambre
+    Particle *--Swarm
+    Animation *--Swarm
+    Swarm *--Test
     class Particle{
-        +vector n_variables
-        +vector inf_limit
-        +vector sup_limit
-        +vector position
-        +vector speed
-        +float value
-        +vector best_position
-        +float best_value
-        -set_value(self, value)
-        -set_best_value()
-        -set_best_position()
-        -move_particle()
+        +int dim
+        +float bound
+        +position 
+        +velocity
+        +personal_best_position
+        +personal_best_value
+        +value
+        -evaluate(self,objective_function)
+        -update_velocity(self, global_best_position:np.array,w:float,c1:float,c2:float,r1:np.array,r2:np.array)
+        -update_position(self)
+        -update_personal_best(self,optmimization_method:str="min")
     }
-    class Enjambre {
+    class Swarm {
         -particles: list
-        -n_particles: int
-        -n_variables: int
-        -lower_limits: list or ndarray
-        -upper_limits: list or ndarray
-        -best_particle: object Particle
-        -best_value: float
-        -best_position: ndarray
-        -particles_history: list
-        -best_position_history: list
-        -best_value_history: list
-        -absolute_difference: list
-        -results_df: DataFrame
-        -optimal_value: float
-        -optimal_position: ndarray
-        -optimized: bool
-        -optimization_iterations: int
-        -verbose: bool
-        +__init__(n_particles, n_variables, lower_limits, upper_limits, verbose)
-        +__repr__()
-        +show_particles(n=None)
-        +evaluate_swarm(objective_function, optimization, verbose=False)
-        +move_swarm(inertia, cognitive_weight, social_weight, verbose=False)
-        +optimize(objective_function, optimization, n_iterations, inertia, reduce_inertia=True, max_inertia=, min_inertia=, cognitive_weight, social_weight, early_stop=False, stop_rounds=None, stop_tolerance=None, verbose=False)
+        -int n_particles = 50
+        -list particles
+        -int dim = 2
+        -float w_max = 0.9
+        -float w_min = 0.4
+        -float c1 = 2
+        -float c2 =2
+        -float bounds = 200
+        -global_best_position
+        -global_best_value
+        -int iterations = 100 
+        -callable objective_function = lambda x,y: x**2+y**2
+        -str optimization_method = "min"
+        +lineal_reduction_inertia(self,iteration:int)
+        +create_particles(self)
+        +find_global_best(self)
+        +optimize(self)
     }
+    class Test {
+        -function
+        -int iterations
+        -int particles
+        -int bounds
+        +run(self)
+    }
+    class Animation{
+        -bounds
+        -objetive_function
+        -x_positions
+        -y_positions
+        +animateFunction(self)
+        +animateCountour(self,cmap='RdYlGn')
+        +animateScatter(self,size=2,color='b')
+        +animate(self,velocity=5,cmap='RdYlGn',size=2,color='b')
+        +clear(self)
+        +show(self)
+    }
+
 
 ```
 --------
