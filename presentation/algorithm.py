@@ -84,7 +84,7 @@ class Swarm:
                 x_positions.append(particle.position[0])
                 y_positions.append(particle.position[1])
             
-            ax.scatter(x_positions, y_positions, s=10, c='b')
+            ax.scatter(x_positions, y_positions, s=10, c='b', zorder=10)
             ax.set_xlim(-self.bounds, self.bounds)
             ax.set_ylim(-self.bounds, self.bounds)
             ax.set_xlabel("x")
