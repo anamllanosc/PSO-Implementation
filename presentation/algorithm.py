@@ -300,7 +300,7 @@ with tab2:
     st.divider()
 
     if st.button("Run Optimization"):
-        function_to_run = functions[option]
+        function_to_run = functions[values[option]]
         if option == 7:
             function_to_run = lambda x, y: function_7(x, height, weith)
         video_path, best_position, best_value = Test(function=function_to_run, iterations=iterations, particles=particles, bounds=bounds).run()
